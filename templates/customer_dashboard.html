@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">My Orders</h2>
+{% if orders %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price (Each)</th>
+                <th>Total Price</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.product.name|default:"Product Unavailable" }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>${{ order.product.price|default:"--" }}</td>
+                <td>${{ order.total_price }}</td>
+                <td>{{ order.date_ordered|date:"M d, Y" }}</td>
+                <td>
+                    {% if order.status == 'Pending' %}
+                    <span class="badge bg-warning text-dark">{{ order.status }}</span>
+                    {% elif order.status == 'Shipped' %}
+                    <span class="badge bg-info text-dark">{{ order.status }}</span>
+                    {% else %}
+                    <span class="badge bg-success">{{ order.status }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+    You have no orders yet. <a href="{% url 'product_list' %}" class="alert-link">Start Shopping</a>
+</div>
+{% endif %}
+{% endblock %}

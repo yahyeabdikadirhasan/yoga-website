@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Products</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for product in products %}
+    <div class="col">
+        <div class="card h-100 product-card shadow-sm border-0 transition-hover">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" class="card-img-top product-img-top" alt="{{ product.name }}">
+            {% else %}
+            <div class="card-img-top product-img-top d-flex align-items-center justify-content-center bg-light">
+                <span class="text-muted">No Image</span>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text text-primary fw-bold">${{ product.price }}</p>
+                <p class="card-text">{{ product.description|truncatewords:20 }}</p>
+            </div>
+            <div class="card-footer bg-transparent border-top-0">
+                <form action="{% url 'add_to_cart' product.pk %}" method="post" class="d-grid mb-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success"><i class="bi bi-cart-plus"></i> Add to
+                        Cart</button>
+                </form>
+                <div class="d-grid">
+                    <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p>No products available.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
